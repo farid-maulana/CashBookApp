@@ -17,6 +17,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowMaterialGrid: false,
       title: 'CashFlow App',
       theme: ThemeData(
         fontFamily: 'Raleway',

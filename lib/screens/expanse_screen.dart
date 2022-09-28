@@ -1,5 +1,6 @@
 import 'package:cash_book_app/routes/routes.dart';
 import 'package:cash_book_app/styles/constant.dart';
+import 'package:cash_book_app/utilities/db_helper.dart';
 import 'package:flutter/material.dart';
 
 class ExpanseScreen extends StatefulWidget {
@@ -10,6 +11,10 @@ class ExpanseScreen extends StatefulWidget {
 }
 
 class _ExpanseScreenState extends State<ExpanseScreen> {
+  final TextEditingController _dateController = TextEditingController();
+  final TextEditingController _nominalController = TextEditingController();
+  final TextEditingController _descriptionController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -80,7 +85,8 @@ class _ExpanseScreenState extends State<ExpanseScreen> {
                       ),
                       child: TextFormField(
                         cursorColor: primaryColor,
-                        keyboardType: TextInputType.datetime,
+                        keyboardType: TextInputType.text,
+                        controller: _dateController,
                         decoration: const InputDecoration(
                           border: InputBorder.none,
                           icon: Icon(
@@ -106,6 +112,7 @@ class _ExpanseScreenState extends State<ExpanseScreen> {
                       child: TextFormField(
                         cursorColor: primaryColor,
                         keyboardType: TextInputType.number,
+                        controller: _nominalController,
                         decoration: const InputDecoration(
                           border: InputBorder.none,
                           icon: Icon(
@@ -131,6 +138,7 @@ class _ExpanseScreenState extends State<ExpanseScreen> {
                       child: TextFormField(
                         cursorColor: primaryColor,
                         keyboardType: TextInputType.datetime,
+                        controller: _descriptionController,
                         decoration: const InputDecoration(
                           border: InputBorder.none,
                           icon: Icon(
@@ -169,7 +177,10 @@ class _ExpanseScreenState extends State<ExpanseScreen> {
                           ),
                         ),
                         InkWell(
-                          onTap: () => {},
+                          onTap: () async {
+                            await _createTransaction();
+                            Navigator.pop(context);
+                          },
                           child: Container(
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(8.0),
@@ -200,6 +211,15 @@ class _ExpanseScreenState extends State<ExpanseScreen> {
           ],
         ),
       ),
+    );
+  }
+
+  Future<void> _createTransaction() async {
+    await DbHelper.createTransaction(
+      _dateController.text,
+      int.parse(_nominalController.text),
+      _descriptionController.text,
+      'expanse',
     );
   }
 }

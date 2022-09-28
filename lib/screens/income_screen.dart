@@ -1,4 +1,5 @@
 import 'package:cash_book_app/styles/constant.dart';
+import 'package:cash_book_app/utilities/db_helper.dart';
 import 'package:flutter/material.dart';
 
 class IncomeScreen extends StatefulWidget {
@@ -9,6 +10,10 @@ class IncomeScreen extends StatefulWidget {
 }
 
 class _IncomeScreenState extends State<IncomeScreen> {
+  final TextEditingController _dateController = TextEditingController();
+  final TextEditingController _nominalController = TextEditingController();
+  final TextEditingController _descriptionController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -79,7 +84,8 @@ class _IncomeScreenState extends State<IncomeScreen> {
                       ),
                       child: TextFormField(
                         cursorColor: primaryColor,
-                        keyboardType: TextInputType.datetime,
+                        keyboardType: TextInputType.text,
+                        controller: _dateController,
                         decoration: const InputDecoration(
                           border: InputBorder.none,
                           icon: Icon(
@@ -105,6 +111,7 @@ class _IncomeScreenState extends State<IncomeScreen> {
                       child: TextFormField(
                         cursorColor: primaryColor,
                         keyboardType: TextInputType.number,
+                        controller: _nominalController,
                         decoration: const InputDecoration(
                           border: InputBorder.none,
                           icon: Icon(
@@ -129,7 +136,8 @@ class _IncomeScreenState extends State<IncomeScreen> {
                       ),
                       child: TextFormField(
                         cursorColor: primaryColor,
-                        keyboardType: TextInputType.datetime,
+                        keyboardType: TextInputType.text,
+                        controller: _descriptionController,
                         decoration: const InputDecoration(
                           border: InputBorder.none,
                           icon: Icon(
@@ -143,9 +151,7 @@ class _IncomeScreenState extends State<IncomeScreen> {
                     Row(
                       children: [
                         InkWell(
-                          onTap: () => {
-                            Navigator.pop(context)
-                          },
+                          onTap: () => {Navigator.pop(context)},
                           child: Container(
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(8.0),
@@ -168,7 +174,10 @@ class _IncomeScreenState extends State<IncomeScreen> {
                           ),
                         ),
                         InkWell(
-                          onTap: () => {},
+                          onTap: () async {
+                            await _createTransaction();
+                            Navigator.pop(context);
+                          },
                           child: Container(
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(8.0),
@@ -199,6 +208,15 @@ class _IncomeScreenState extends State<IncomeScreen> {
           ],
         ),
       ),
+    );
+  }
+
+  Future<void> _createTransaction() async {
+    await DbHelper.createTransaction(
+      _dateController.text,
+      int.parse(_nominalController.text),
+      _descriptionController.text,
+      'income',
     );
   }
 }

@@ -1,6 +1,6 @@
-import 'package:cash_book_app/models/Transaction.dart';
 import 'package:cash_book_app/styles/constant.dart';
 import 'package:cash_book_app/utilities/currency_format.dart';
+import 'package:cash_book_app/utilities/db_helper.dart';
 import 'package:flutter/material.dart';
 
 class HistoryScreen extends StatefulWidget {
@@ -11,6 +11,24 @@ class HistoryScreen extends StatefulWidget {
 }
 
 class _HistoryScreenState extends State<HistoryScreen> {
+  List<Map<String, dynamic>> _transactions = [];
+
+  bool _isLoading = true;
+
+  void _refreshTransactions() async {
+    final data = await DbHelper.fetchTransactions();
+    setState(() {
+      _transactions = data;
+      _isLoading = false;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _refreshTransactions();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -66,7 +84,6 @@ class _HistoryScreenState extends State<HistoryScreen> {
                 padding: const EdgeInsets.symmetric(horizontal: 14),
                 child: ListView.separated(
                   itemBuilder: (context, index) {
-                    final Transaction transaction = transactionList[index];
                     return Padding(
                       padding: const EdgeInsets.symmetric(
                         horizontal: 12.0,
@@ -98,7 +115,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   Text(
-                                    transaction.description,
+                                    _transactions[index]['description'],
                                     style: const TextStyle(
                                       fontSize: 18,
                                       fontWeight: FontWeight.bold,
@@ -108,7 +125,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                                     height: 8,
                                   ),
                                   Text(
-                                    transaction.date,
+                                    _transactions[index]['date'],
                                     style: const TextStyle(
                                       color: greyColor,
                                       fontWeight: FontWeight.w600,
@@ -121,11 +138,11 @@ class _HistoryScreenState extends State<HistoryScreen> {
                           Row(
                             children: [
                               Icon(
-                                transaction.category == 'income'
+                                _transactions[index]['category'] == 'income'
                                     ? Icons.add
                                     : Icons.remove,
                                 size: 20,
-                                color: transaction.category == 'income'
+                                color: _transactions[index]['category'] == 'income'
                                     ? successColor
                                     : dangerColor,
                               ),
@@ -135,7 +152,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                                   'Rp',
                                   style: TextStyle(
                                     fontSize: 12,
-                                    color: transaction.category == 'income'
+                                    color: _transactions[index]['category'] == 'income'
                                         ? successColor
                                         : dangerColor,
                                   ),
@@ -143,11 +160,11 @@ class _HistoryScreenState extends State<HistoryScreen> {
                               ),
                               Text(
                                 CurrencyFormat.convertToIdr(
-                                    transaction.nominal, 0),
+                                    _transactions[index]['nominal'], 0),
                                 style: TextStyle(
                                   fontSize: 20,
                                   fontWeight: FontWeight.bold,
-                                  color: transaction.category == 'income'
+                                  color: _transactions[index]['category'] == 'income'
                                       ? successColor
                                       : dangerColor,
                                 ),
@@ -158,7 +175,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                       ),
                     );
                   },
-                  itemCount: transactionList.length,
+                  itemCount: _transactions.length,
                   separatorBuilder: (context, index) {
                     return const Divider(
                       color: foregroundColor,
