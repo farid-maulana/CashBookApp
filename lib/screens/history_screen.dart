@@ -13,13 +13,10 @@ class HistoryScreen extends StatefulWidget {
 class _HistoryScreenState extends State<HistoryScreen> {
   List<Map<String, dynamic>> _transactions = [];
 
-  bool _isLoading = true;
-
   void _refreshTransactions() async {
     final data = await DbHelper.fetchTransactions();
     setState(() {
       _transactions = data;
-      _isLoading = false;
     });
   }
 
