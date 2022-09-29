@@ -1,3 +1,4 @@
+import 'package:cash_book_app/screens/login_screen.dart';
 import 'package:cash_book_app/styles/constant.dart';
 import 'package:cash_book_app/utilities/db_helper.dart';
 import 'package:flutter/material.dart';
@@ -188,8 +189,38 @@ class _SettingScreenState extends State<SettingScreen> {
                         ),
                       ),
                     ),
+                    InkWell(
+                      onTap: () => {
+                        Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => LoginScreen(),
+                          ),
+                          (route) => false,
+                        )
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8.0),
+                          color: dangerColor,
+                        ),
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 12,
+                          horizontal: 28,
+                        ),
+                        alignment: Alignment.center,
+                        child: const Text(
+                          'Logout',
+                          style: TextStyle(
+                            color: whiteColor,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
                     const SizedBox(
-                      height: 240,
+                      height: 200,
                     ),
                     Row(
                       children: [
