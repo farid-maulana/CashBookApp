@@ -88,16 +88,17 @@ class _HistoryScreenState extends State<HistoryScreen> {
                       ),
                       child: Row(
                         children: [
-                          const Expanded(
+                          Expanded(
                             flex: 1,
                             child: CircleAvatar(
-                              backgroundColor: primaryColor,
-                              radius: 32,
-                              child: CircleAvatar(
-                                radius: 31.5, // Image radius
-                                backgroundImage:
-                                    AssetImage('assets/images/profil.jpg'),
-                              ),
+                              radius: 30, // Image radius
+                              backgroundColor: lightColor,
+                              backgroundImage:
+                                  _transactions[index]['category'] == 'income'
+                                      ? const AssetImage(
+                                          'assets/images/income.png')
+                                      : const AssetImage(
+                                          'assets/images/salary.png'),
                             ),
                           ),
                           Expanded(
@@ -139,17 +140,19 @@ class _HistoryScreenState extends State<HistoryScreen> {
                                     ? Icons.add
                                     : Icons.remove,
                                 size: 20,
-                                color: _transactions[index]['category'] == 'income'
-                                    ? successColor
-                                    : dangerColor,
+                                color:
+                                    _transactions[index]['category'] == 'income'
+                                        ? successColor
+                                        : dangerColor,
                               ),
                               Padding(
-                                padding: EdgeInsets.only(right: 4.0),
+                                padding: const EdgeInsets.only(right: 4.0),
                                 child: Text(
                                   'Rp',
                                   style: TextStyle(
                                     fontSize: 12,
-                                    color: _transactions[index]['category'] == 'income'
+                                    color: _transactions[index]['category'] ==
+                                            'income'
                                         ? successColor
                                         : dangerColor,
                                   ),
@@ -161,7 +164,8 @@ class _HistoryScreenState extends State<HistoryScreen> {
                                 style: TextStyle(
                                   fontSize: 20,
                                   fontWeight: FontWeight.bold,
-                                  color: _transactions[index]['category'] == 'income'
+                                  color: _transactions[index]['category'] ==
+                                          'income'
                                       ? successColor
                                       : dangerColor,
                                 ),
