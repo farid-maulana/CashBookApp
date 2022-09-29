@@ -164,12 +164,13 @@ class _LoginScreenState extends State<LoginScreen> {
 
     if (state.isNotEmpty) {
       _refreshScreen('', foregroundColor, foregroundColor);
-      Navigator.of(context).push(
+      Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(
           builder: (context) => HomeScreen(
             userId: state[0]['id'],
           ),
         ),
+        (route) => false,
       );
     } else if (_usernameController.text == '' &&
         _passwordController.text == '') {
