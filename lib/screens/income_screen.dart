@@ -1,3 +1,4 @@
+import 'package:cash_book_app/routes/routes.dart';
 import 'package:cash_book_app/styles/constant.dart';
 import 'package:cash_book_app/utilities/db_helper.dart';
 import 'package:flutter/material.dart';
@@ -176,7 +177,7 @@ class _IncomeScreenState extends State<IncomeScreen> {
                         InkWell(
                           onTap: () async {
                             await _createTransaction();
-                            Navigator.pop(context);
+                            Navigator.pushNamed(context, Routes.homeScreen);
                           },
                           child: Container(
                             decoration: BoxDecoration(

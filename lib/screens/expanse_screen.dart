@@ -179,7 +179,7 @@ class _ExpanseScreenState extends State<ExpanseScreen> {
                         InkWell(
                           onTap: () async {
                             await _createTransaction();
-                            Navigator.pop(context);
+                            Navigator.pushNamed(context, Routes.homeScreen);
                           },
                           child: Container(
                             decoration: BoxDecoration(
