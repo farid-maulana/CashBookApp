@@ -42,7 +42,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                     padding: EdgeInsets.only(top: 56),
                     child: Center(
                       child: Text(
-                        'History',
+                        'Detail Cashflow',
                         style: TextStyle(
                           fontSize: 20,
                           color: whiteColor,

@@ -241,7 +241,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                               vertical: 8.0,
                                             ),
                                             child: Text(
-                                              'Tambah pemasukkan',
+                                              'Tambah Pemasukkan',
                                               style: TextStyle(
                                                 fontSize: 14,
                                                 fontWeight: FontWeight.w500,

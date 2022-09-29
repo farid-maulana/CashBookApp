@@ -70,6 +70,8 @@ flutter:
     - assets/images/outcome.jpg
     - assets/images/detail.png
     - assets/images/setting.png
+    - assets/images/income.png
+    - assets/images/salary.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

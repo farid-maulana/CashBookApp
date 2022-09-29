@@ -115,9 +115,13 @@ class _ExpanseScreenState extends State<ExpanseScreen> {
                         controller: _nominalController,
                         decoration: const InputDecoration(
                           border: InputBorder.none,
-                          icon: Icon(
-                            Icons.currency_exchange,
-                            color: primaryColor,
+                          icon: Text(
+                            'Rp',
+                            style: TextStyle(
+                              color: primaryColor,
+                              fontSize: 18,
+                              fontWeight: FontWeight.w600,
+                            ),
                           ),
                           hintText: 'Nominal',
                         ),
@@ -152,14 +156,14 @@ class _ExpanseScreenState extends State<ExpanseScreen> {
                     Row(
                       children: [
                         InkWell(
-                          onTap: () => {
-                            Navigator.pop(context)
-                          },
+                          onTap: () => {Navigator.pop(context)},
                           child: Container(
                             decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(8.0),
-                              color: foregroundColor,
-                            ),
+                                borderRadius: BorderRadius.circular(8.0),
+                                color: whiteColor,
+                                border: Border.all(
+                                  color: secondaryColor,
+                                )),
                             margin: const EdgeInsets.only(top: 12, right: 12),
                             padding: const EdgeInsets.symmetric(
                               vertical: 12,
@@ -184,7 +188,7 @@ class _ExpanseScreenState extends State<ExpanseScreen> {
                           child: Container(
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(8.0),
-                              color: const Color(0xFF091A7A),
+                              color: secondaryColor,
                             ),
                             margin: const EdgeInsets.only(top: 12),
                             padding: const EdgeInsets.symmetric(
