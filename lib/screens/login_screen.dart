@@ -1,5 +1,8 @@
+import 'dart:developer';
+
 import 'package:cash_book_app/routes/routes.dart';
 import 'package:cash_book_app/styles/constant.dart';
+import 'package:cash_book_app/utilities/db_helper.dart';
 import 'package:flutter/material.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -10,6 +13,22 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
+  String errorMessage = '';
+  var usernameColor = foregroundColor;
+  var passwordColor = foregroundColor;
+
+  void _refreshScreen(
+      String errorMessage, var usernameColor, var passwordColor) async {
+    setState(() {
+      this.errorMessage = errorMessage;
+      this.usernameColor = usernameColor;
+      this.passwordColor = passwordColor;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -54,17 +73,18 @@ class _LoginScreenState extends State<LoginScreen> {
                           borderRadius: BorderRadius.circular(32),
                           // color: const Color(0xFFD6E4FF).withAlpha(144),
                           border: Border.all(
-                            color: foregroundColor,
+                            color: usernameColor,
                           ),
                         ),
                         child: TextFormField(
                           cursorColor: primaryColor,
                           keyboardType: TextInputType.text,
-                          decoration: const InputDecoration(
+                          controller: _usernameController,
+                          decoration: InputDecoration(
                             border: InputBorder.none,
                             icon: Icon(
                               Icons.person,
-                              color: primaryColor,
+                              color: usernameColor,
                             ),
                             hintText: 'Username',
                           ),
@@ -78,30 +98,30 @@ class _LoginScreenState extends State<LoginScreen> {
                           borderRadius: BorderRadius.circular(32),
                           // color: const Color(0xFFD6E4FF).withAlpha(144),
                           border: Border.all(
-                            color: foregroundColor,
+                            color: passwordColor,
                           ),
                         ),
                         child: TextFormField(
                           cursorColor: primaryColor,
-                          keyboardType: TextInputType.text,
+                          keyboardType: TextInputType.visiblePassword,
+                          controller: _passwordController,
                           obscureText: true,
-                          decoration: const InputDecoration(
+                          decoration: InputDecoration(
                             border: InputBorder.none,
                             icon: Icon(
                               Icons.lock,
-                              color: primaryColor,
+                              color: passwordColor,
                             ),
                             hintText: 'Password',
                           ),
                         ),
                       ),
                       InkWell(
-                        onTap: () => {
-                          Navigator.pushNamed(
-                            context,
-                            Routes.homeScreen,
-                          )
-                        },
+                        // onTap: () async {
+                        //   await _login();
+                        // },
+                        onTap: () =>
+                            {Navigator.pushNamed(context, Routes.homeScreen)},
                         child: Container(
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(32),
@@ -121,6 +141,14 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                         ),
                       ),
+                      Text(
+                        errorMessage,
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                          color: dangerColor,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      )
                     ],
                   ),
                 ),
@@ -130,5 +158,30 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
       ),
     );
+  }
+
+  Future<void> _login() async {
+    var state = await DbHelper.login(
+      _usernameController.text,
+      _passwordController.text,
+    );
+
+    if (state.isNotEmpty) {
+      _refreshScreen('', foregroundColor, foregroundColor);
+      Navigator.pushNamed(context, Routes.homeScreen);
+    } else if (_usernameController.text == '' && _passwordController.text == '') {
+      _refreshScreen(
+          'Username dan password harus di isi!', dangerColor, dangerColor);
+    } else if (_usernameController.text == '') {
+      _refreshScreen('Username harus di isi!', dangerColor, foregroundColor);
+    } else if (_passwordController.text == '') {
+      _refreshScreen('Password harus di isi!', foregroundColor, dangerColor);
+    } else {
+      _refreshScreen(
+        'Login gagal, pastikan username atau password yang Anda masukkan sudah benar!',
+        foregroundColor,
+        foregroundColor,
+      );
+    }
   }
 }
