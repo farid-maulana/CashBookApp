@@ -63,6 +63,17 @@ class DbHelper {
     return data;
   }
 
+  // Get user login
+  static Future<List<Map<String, dynamic>>> userLoggedIn(int? id) async {
+    final db = await DbHelper.db();
+    final data = db.query('users',
+        where: 'id = ?',
+        whereArgs: [id],
+        limit: 1);
+
+    return data;
+  }
+
   // Create new transaction
   static Future<int> createTransaction(
     String date,

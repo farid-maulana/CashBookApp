@@ -16,13 +16,17 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int _income = 0;
   int _expanse = 0;
+  List<Map<String, dynamic>> _user = [];
 
   void _refreshTransactions() async {
     final income = await DbHelper.calculateTransaction('income');
     final expanse = await DbHelper.calculateTransaction('expanse');
+    final user = await DbHelper.userLoggedIn(widget.userId);
+
     setState(() {
       _income = income[0]['total'] ?? 0;
       _expanse = expanse[0]['total'] ?? 0;
+      _user = user;
     });
   }
 
@@ -50,16 +54,16 @@ class _HomeScreenState extends State<HomeScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      const CircleAvatar(
+                      CircleAvatar(
                         radius: 36, // Image radius
-                        backgroundImage: AssetImage('assets/images/profil.jpg'),
+                        backgroundImage: AssetImage(_user[0]['photo']),
                       ),
                       Padding(
                         padding: const EdgeInsets.only(left: 16.0, top: 8.0),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
-                          children: const [
-                            Text(
+                          children: [
+                            const Text(
                               'Welcome back',
                               style: TextStyle(
                                 fontSize: 16,
@@ -67,10 +71,10 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                             ),
                             Padding(
-                              padding: EdgeInsets.only(top: 4.0),
+                              padding: const EdgeInsets.only(top: 4.0),
                               child: Text(
-                                'Farlan',
-                                style: TextStyle(
+                                _user[0]['name'],
+                                style: const TextStyle(
                                   fontSize: 28,
                                   color: whiteColor,
                                   fontWeight: FontWeight.w600,
