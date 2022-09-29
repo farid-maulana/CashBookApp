@@ -61,7 +61,7 @@ class DbHelper {
         where: 'username = ? AND password = ?',
         whereArgs: [username, password],
         limit: 1);
-        
+
     return data;
   }
 
@@ -94,5 +94,15 @@ class DbHelper {
   static Future<List<Map<String, dynamic>>> fetchTransactions() async {
     final db = await DbHelper.db();
     return db.query('transactions', orderBy: 'id DESC');
+  }
+
+  // Calculate total income
+  static Future<List<Map<String, dynamic>>> calculateTransaction(
+      String category) async {
+    final db = await DbHelper.db();
+    final data = await db.rawQuery(
+        "SELECT SUM(nominal) as total FROM transactions WHERE category = '$category'");
+
+    return data;
   }
 }

@@ -1,16 +1,39 @@
+import 'dart:developer';
+
 import 'package:cash_book_app/routes/routes.dart';
 import 'package:cash_book_app/styles/constant.dart';
 import 'package:cash_book_app/utilities/currency_format.dart';
+import 'package:cash_book_app/utilities/db_helper.dart';
 import 'package:flutter/material.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    int outcome = 500000;
-    int income = 1500000;
+  State<HomeScreen> createState() => _HomeScreenState();
+}
 
+class _HomeScreenState extends State<HomeScreen> {
+  int _income = 0;
+  int _expanse = 0;
+
+  void _refreshTransactions() async {
+    final income = await DbHelper.calculateTransaction('income');
+    final expanse = await DbHelper.calculateTransaction('expanse');
+    setState(() {
+      _income = income[0]['total'] ?? 0;
+      _expanse = expanse[0]['total'] ?? 0;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _refreshTransactions();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: primaryColor,
       body: SingleChildScrollView(
@@ -94,7 +117,7 @@ class HomeScreen extends StatelessWidget {
                                   ),
                                 ),
                                 Text(
-                                  CurrencyFormat.convertToIdr(income, 0),
+                                  CurrencyFormat.convertToIdr(_income, 0),
                                   style: const TextStyle(
                                     fontSize: 24,
                                     fontWeight: FontWeight.w600,
@@ -128,7 +151,7 @@ class HomeScreen extends StatelessWidget {
                                   ),
                                 ),
                                 Text(
-                                  CurrencyFormat.convertToIdr(outcome, 0),
+                                  CurrencyFormat.convertToIdr(_expanse, 0),
                                   style: const TextStyle(
                                     fontSize: 24,
                                     fontWeight: FontWeight.w600,
@@ -196,7 +219,8 @@ class HomeScreen extends StatelessWidget {
                               children: [
                                 InkWell(
                                   onTap: () => {
-                                    Navigator.pushNamed(context, Routes.incomeScreen)
+                                    Navigator.pushNamed(
+                                        context, Routes.incomeScreen)
                                   },
                                   child: Card(
                                     elevation: 2.0,
@@ -227,7 +251,8 @@ class HomeScreen extends StatelessWidget {
                                 ),
                                 InkWell(
                                   onTap: () => {
-                                    Navigator.pushNamed(context, Routes.expenseScreen)
+                                    Navigator.pushNamed(
+                                        context, Routes.expenseScreen)
                                   },
                                   child: Card(
                                     elevation: 2.0,
@@ -266,7 +291,8 @@ class HomeScreen extends StatelessWidget {
                               children: [
                                 InkWell(
                                   onTap: () => {
-                                    Navigator.pushNamed(context, Routes.historyScreen)
+                                    Navigator.pushNamed(
+                                        context, Routes.historyScreen)
                                   },
                                   child: Card(
                                     elevation: 2.0,
@@ -297,7 +323,8 @@ class HomeScreen extends StatelessWidget {
                                 ),
                                 InkWell(
                                   onTap: () => {
-                                    Navigator.pushNamed(context, Routes.settingScreen)
+                                    Navigator.pushNamed(
+                                        context, Routes.settingScreen)
                                   },
                                   child: Card(
                                     elevation: 2.0,
