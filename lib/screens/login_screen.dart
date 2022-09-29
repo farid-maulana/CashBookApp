@@ -117,11 +117,9 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                       ),
                       InkWell(
-                        // onTap: () async {
-                        //   await _login();
-                        // },
-                        onTap: () =>
-                            {Navigator.pushNamed(context, Routes.homeScreen)},
+                        onTap: () async {
+                          await _login();
+                        },
                         child: Container(
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(32),
