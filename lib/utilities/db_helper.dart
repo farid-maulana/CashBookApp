@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:sqflite/sqflite.dart';
 
 class DbHelper {
@@ -104,5 +102,37 @@ class DbHelper {
         "SELECT SUM(nominal) as total FROM transactions WHERE category = '$category'");
 
     return data;
+  }
+
+  // Change password
+  static Future<bool> changePassword(
+      int id, String oldPassword, String newPassword) async {
+    final db = await DbHelper.db();
+
+    // Check old password
+    final oldPass = await db.query(
+      'users',
+      columns: ['password'],
+      where: 'id = ?',
+      whereArgs: [id],
+      limit: 1,
+    );
+
+    if (oldPass[0]['password'] == oldPassword) {
+      final data = {
+        'password': newPassword,
+      };
+
+      await db.update(
+        'users',
+        data,
+        where: 'id = ?',
+        whereArgs: [id],
+      );
+
+      return true;
+    } else {
+      return false;
+    }
   }
 }

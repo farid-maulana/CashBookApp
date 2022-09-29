@@ -1,13 +1,13 @@
-import 'dart:developer';
-
 import 'package:cash_book_app/routes/routes.dart';
+import 'package:cash_book_app/screens/setting_screen.dart';
 import 'package:cash_book_app/styles/constant.dart';
 import 'package:cash_book_app/utilities/currency_format.dart';
 import 'package:cash_book_app/utilities/db_helper.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+  final int? userId;
+  const HomeScreen({Key? key, this.userId}) : super(key: key);
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -323,8 +323,13 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ),
                                 InkWell(
                                   onTap: () => {
-                                    Navigator.pushNamed(
-                                        context, Routes.settingScreen)
+                                    Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                        builder: (context) => SettingScreen(
+                                          userId: widget.userId,
+                                        ),
+                                      ),
+                                    )
                                   },
                                   child: Card(
                                     elevation: 2.0,

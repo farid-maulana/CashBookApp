@@ -1,6 +1,4 @@
-import 'dart:developer';
-
-import 'package:cash_book_app/routes/routes.dart';
+import 'package:cash_book_app/screens/home_screen.dart';
 import 'package:cash_book_app/styles/constant.dart';
 import 'package:cash_book_app/utilities/db_helper.dart';
 import 'package:flutter/material.dart';
@@ -166,8 +164,15 @@ class _LoginScreenState extends State<LoginScreen> {
 
     if (state.isNotEmpty) {
       _refreshScreen('', foregroundColor, foregroundColor);
-      Navigator.pushNamed(context, Routes.homeScreen);
-    } else if (_usernameController.text == '' && _passwordController.text == '') {
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => HomeScreen(
+            userId: state[0]['id'],
+          ),
+        ),
+      );
+    } else if (_usernameController.text == '' &&
+        _passwordController.text == '') {
       _refreshScreen(
           'Username dan password harus di isi!', dangerColor, dangerColor);
     } else if (_usernameController.text == '') {

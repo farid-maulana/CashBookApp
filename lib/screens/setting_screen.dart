@@ -1,14 +1,33 @@
 import 'package:cash_book_app/styles/constant.dart';
+import 'package:cash_book_app/utilities/db_helper.dart';
 import 'package:flutter/material.dart';
 
 class SettingScreen extends StatefulWidget {
-  const SettingScreen({Key? key}) : super(key: key);
+  final int? userId;
+
+  const SettingScreen({Key? key, this.userId}) : super(key: key);
 
   @override
   State<SettingScreen> createState() => _SettingScreenState();
 }
 
 class _SettingScreenState extends State<SettingScreen> {
+  final TextEditingController _oldPasswordController = TextEditingController();
+  final TextEditingController _newPasswordController = TextEditingController();
+
+  String errorMessage = '';
+  var oldPasswordColor = foregroundColor;
+  var newPasswordColor = foregroundColor;
+
+  void _refreshScreen(
+      String errorMessage, var oldPasswordColor, var newPasswordColor) async {
+    setState(() {
+      this.errorMessage = errorMessage;
+      this.oldPasswordColor = oldPasswordColor;
+      this.newPasswordColor = newPasswordColor;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -86,18 +105,19 @@ class _SettingScreenState extends State<SettingScreen> {
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(12.0),
                         border: Border.all(
-                          color: foregroundColor,
+                          color: oldPasswordColor,
                         ),
                       ),
                       child: TextFormField(
                         obscureText: true,
                         cursorColor: primaryColor,
                         keyboardType: TextInputType.visiblePassword,
-                        decoration: const InputDecoration(
+                        controller: _oldPasswordController,
+                        decoration: InputDecoration(
                           border: InputBorder.none,
                           icon: Icon(
                             Icons.lock,
-                            color: primaryColor,
+                            color: oldPasswordColor,
                           ),
                           hintText: 'Password lama',
                         ),
@@ -112,25 +132,28 @@ class _SettingScreenState extends State<SettingScreen> {
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(12.0),
                         border: Border.all(
-                          color: foregroundColor,
+                          color: newPasswordColor,
                         ),
                       ),
                       child: TextFormField(
                         obscureText: true,
                         cursorColor: primaryColor,
                         keyboardType: TextInputType.visiblePassword,
-                        decoration: const InputDecoration(
+                        controller: _newPasswordController,
+                        decoration: InputDecoration(
                           border: InputBorder.none,
                           icon: Icon(
                             Icons.lock,
-                            color: primaryColor,
+                            color: newPasswordColor,
                           ),
                           hintText: 'Password baru',
                         ),
                       ),
                     ),
                     InkWell(
-                      onTap: () => {},
+                      onTap: () async {
+                        await _changePassword();
+                      },
                       child: Container(
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(8.0),
@@ -152,8 +175,21 @@ class _SettingScreenState extends State<SettingScreen> {
                         ),
                       ),
                     ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 8.0),
+                      child: Center(
+                        child: Text(
+                          errorMessage,
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(
+                            color: dangerColor,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    ),
                     const SizedBox(
-                      height: 256,
+                      height: 240,
                     ),
                     Row(
                       children: [
@@ -216,5 +252,28 @@ class _SettingScreenState extends State<SettingScreen> {
         ),
       ),
     );
+  }
+
+  Future<void> _changePassword() async {
+    var state = await DbHelper.changePassword(
+      int.parse(widget.userId.toString()),
+      _oldPasswordController.text,
+      _newPasswordController.text,
+    );
+
+    if (state) {
+      _refreshScreen('', foregroundColor, foregroundColor);
+    } else if (_oldPasswordController.text == '' &&
+        _newPasswordController.text == '') {
+      _refreshScreen('Semua field harus di isi!', dangerColor, dangerColor);
+    } else if (_oldPasswordController.text == '') {
+      _refreshScreen(
+          'Password lama harus di isi!', dangerColor, foregroundColor);
+    } else if (_newPasswordController.text == '') {
+      _refreshScreen(
+          'Password baru harus di isi!', foregroundColor, dangerColor);
+    } else {
+      _refreshScreen('Password lama salah', dangerColor, foregroundColor);
+    }
   }
 }
