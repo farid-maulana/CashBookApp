@@ -224,7 +224,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                 InkWell(
                                   onTap: () => {
                                     Navigator.pushNamed(
-                                        context, Routes.incomeScreen)
+                                      context,
+                                      Routes.incomeScreen,
+                                      arguments: <String, int> {
+                                        'userId': widget.userId ?? 0,
+                                      },
+                                    )
                                   },
                                   child: Card(
                                     elevation: 2.0,
@@ -256,7 +261,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                 InkWell(
                                   onTap: () => {
                                     Navigator.pushNamed(
-                                        context, Routes.expenseScreen)
+                                      context,
+                                      Routes.expenseScreen,
+                                      arguments: <String, int> {
+                                        'userId': widget.userId ?? 0,
+                                      },
+                                    )
                                   },
                                   child: Card(
                                     elevation: 2.0,

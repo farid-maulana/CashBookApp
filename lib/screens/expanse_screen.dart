@@ -1,4 +1,5 @@
 import 'package:cash_book_app/routes/routes.dart';
+import 'package:cash_book_app/screens/home_screen.dart';
 import 'package:cash_book_app/styles/constant.dart';
 import 'package:cash_book_app/utilities/db_helper.dart';
 import 'package:flutter/material.dart';
@@ -21,6 +22,9 @@ class _ExpanseScreenState extends State<ExpanseScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final Map<String, int> userId = ModalRoute.of(context)!.settings.arguments as Map<String, int>;
+    int? id = userId["userId"];
+    
     return Scaffold(
       backgroundColor: primaryColor,
       body: SingleChildScrollView(
@@ -190,7 +194,13 @@ class _ExpanseScreenState extends State<ExpanseScreen> {
                         InkWell(
                           onTap: () async {
                             await _createTransaction();
-                            Navigator.pushNamed(context, Routes.homeScreen);
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => HomeScreen(
+                                  userId: id,
+                                ),
+                              ),
+                            );
                           },
                           child: Container(
                             decoration: BoxDecoration(
