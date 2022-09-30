@@ -2,6 +2,7 @@ import 'package:cash_book_app/routes/routes.dart';
 import 'package:cash_book_app/styles/constant.dart';
 import 'package:cash_book_app/utilities/db_helper.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class ExpanseScreen extends StatefulWidget {
   const ExpanseScreen({Key? key}) : super(key: key);
@@ -14,6 +15,9 @@ class _ExpanseScreenState extends State<ExpanseScreen> {
   final TextEditingController _dateController = TextEditingController();
   final TextEditingController _nominalController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
+
+  DateTime selectedDate = DateTime.now();
+
 
   @override
   Widget build(BuildContext context) {
@@ -87,6 +91,9 @@ class _ExpanseScreenState extends State<ExpanseScreen> {
                         cursorColor: primaryColor,
                         keyboardType: TextInputType.text,
                         controller: _dateController,
+                        onTap: () {
+                          _selectDate(context);
+                        },
                         decoration: const InputDecoration(
                           border: InputBorder.none,
                           icon: Icon(
@@ -225,5 +232,20 @@ class _ExpanseScreenState extends State<ExpanseScreen> {
       _descriptionController.text,
       'expanse',
     );
+  }
+
+  Future _selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: selectedDate,
+      firstDate: DateTime(2015, 8),
+      lastDate: DateTime(2101),
+    );
+    if (picked != null && picked != selectedDate) {
+      setState(() {
+        selectedDate = picked;
+        _dateController.text = DateFormat('dd-MM-yyyy').format(selectedDate);
+      });
+    }
   }
 }

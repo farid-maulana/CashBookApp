@@ -2,6 +2,7 @@ import 'package:cash_book_app/routes/routes.dart';
 import 'package:cash_book_app/styles/constant.dart';
 import 'package:cash_book_app/utilities/db_helper.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class IncomeScreen extends StatefulWidget {
   const IncomeScreen({Key? key}) : super(key: key);
@@ -14,6 +15,8 @@ class _IncomeScreenState extends State<IncomeScreen> {
   final TextEditingController _dateController = TextEditingController();
   final TextEditingController _nominalController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
+
+  DateTime selectedDate = DateTime.now();
 
   @override
   Widget build(BuildContext context) {
@@ -84,6 +87,9 @@ class _IncomeScreenState extends State<IncomeScreen> {
                         ),
                       ),
                       child: TextFormField(
+                        onTap: () {
+                          _selectDate(context);
+                        },
                         cursorColor: primaryColor,
                         keyboardType: TextInputType.text,
                         controller: _dateController,
@@ -225,5 +231,20 @@ class _IncomeScreenState extends State<IncomeScreen> {
       _descriptionController.text,
       'income',
     );
+  }
+
+  Future _selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: selectedDate,
+      firstDate: DateTime(2015, 8),
+      lastDate: DateTime(2101),
+    );
+    if (picked != null && picked != selectedDate) {
+      setState(() {
+        selectedDate = picked;
+        _dateController.text = DateFormat('dd-MM-yyyy').format(selectedDate);
+      });
+    }
   }
 }
